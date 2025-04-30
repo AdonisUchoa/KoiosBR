@@ -1,9 +1,11 @@
+<!-- Versão Vue 3 com CDN e navegação por páginas simuladas -->
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Koios | Inovação e Praticidade</title>
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
   <style>
     body {
       margin: 0;
@@ -32,6 +34,7 @@
       color: #f5f5f5;
       text-decoration: none;
       font-weight: bold;
+      cursor: pointer;
     }
     nav a:hover {
       color: #4ca1af;
@@ -58,54 +61,84 @@
   </style>
 </head>
 <body>
-  <header>
-    <h1>Koios</h1>
-    <p>Inteligência, estilo e praticidade na palma da sua mão</p>
-  </header>
-  <nav>
-    <a href="#sobre">Sobre</a>
-    <a href="#valores">Valores</a>
-    <a href="#projetos">Projetos</a>
-    <a href="#privacidade">Privacidade</a>
-    <a href="#contato">Contato</a>
-  </nav>
+  <div id="app">
+    <header>
+      <h1>{{ nomeEmpresa }}</h1>
+      <p>{{ slogan }}</p>
+    </header>
 
-  <section id="sobre">
-    <h2>Sobre a Koios</h2>
-    <p>A <span class="highlight">Koios</span> nasceu da inspiração no titã da inteligência da mitologia grega, Ceus (Koios). Buscamos unir sabedoria e inovação para entregar experiências reais ao nosso público.</p>
-    <p>Atuamos na venda de <strong>camisas de time</strong>, <strong>iPhones</strong> e estamos desenvolvendo o projeto <strong>Meu Bolso</strong>, uma solução de finanças pessoais com controle direto pelo WhatsApp.</p>
-  </section>
+    <nav>
+      <a @click="pagina = 'sobre'">Sobre</a>
+      <a @click="pagina = 'valores'">Valores</a>
+      <a @click="pagina = 'projetos'">Projetos</a>
+      <a @click="pagina = 'privacidade'">Privacidade</a>
+      <a @click="pagina = 'contato'">Contato</a>
+    </nav>
 
-  <section id="valores">
-    <h2>Missão, Visão e Valores</h2>
-    <ul>
-      <li><strong>Missão:</strong> Facilitar o dia a dia com soluções acessíveis e tecnológicas.</li>
-      <li><strong>Visão:</strong> Ser referência em inovação prática e confiável.</li>
-      <li><strong>Valores:</strong> Inovação com propósito, ética, simplicidade e foco no cliente.</li>
-    </ul>
-  </section>
+    <section v-if="pagina === 'sobre'">
+      <h2>Sobre a {{ nomeEmpresa }}</h2>
+      <p>A <span class="highlight">{{ nomeEmpresa }}</span> nasceu da inspiração no titã da inteligência da mitologia grega, Ceus (Koios). Buscamos unir sabedoria e inovação para entregar experiências reais ao nosso público.</p>
+      <p>Atuamos na venda de <strong>camisas de time</strong>, <strong>iPhones</strong> e estamos desenvolvendo o projeto <strong>{{ projeto }}</strong>, uma solução de finanças pessoais com controle direto pelo WhatsApp.</p>
+    </section>
 
-  <section id="projetos">
-    <h2>Nossos Produtos e Projetos</h2>
-    <p>✔ Camisas de time autênticas<br />
-       ✔ iPhones seminovos com garantia<br />
-       ✔ Meu Bolso – Seu controle financeiro via WhatsApp</p>
-  </section>
+    <section v-if="pagina === 'valores'">
+      <h2>Missão, Visão e Valores</h2>
+      <ul>
+        <li><strong>Missão:</strong> {{ valores.missao }}</li>
+        <li><strong>Visão:</strong> {{ valores.visao }}</li>
+        <li><strong>Valores:</strong> {{ valores.lista.join(', ') }}</li>
+      </ul>
+    </section>
 
-  <section id="privacidade">
-    <h2>Política de Privacidade</h2>
-    <p>Respeitamos sua privacidade. Os dados coletados são utilizados apenas para fins operacionais, de forma segura e conforme a LGPD. Não compartilhamos dados com terceiros.</p>
-  </section>
+    <section v-if="pagina === 'projetos'">
+      <h2>Nossos Produtos e Projetos</h2>
+      <ul>
+        <li v-for="item in produtos" :key="item">✔ {{ item }}</li>
+      </ul>
+    </section>
 
-  <section id="contato">
-    <h2>Contato</h2>
-    <p><strong>WhatsApp:</strong> (xx) xxxxx-xxxx<br />
-       <strong>E-mail:</strong> contato@koios.com.br<br />
-       <strong>Instagram:</strong> @koios.oficial</p>
-  </section>
+    <section v-if="pagina === 'privacidade'">
+      <h2>Política de Privacidade</h2>
+      <p>{{ politica }}</p>
+    </section>
 
-  <footer>
-    <p>&copy; 2025 Koios. Todos os direitos reservados.</p>
-  </footer>
+    <section v-if="pagina === 'contato'">
+      <h2>Contato</h2>
+      <p><strong>WhatsApp:</strong> {{ contato.whatsapp }}<br />
+         <strong>E-mail:</strong> {{ contato.email }}<br />
+         <strong>Instagram:</strong> {{ contato.instagram }}</p>
+    </section>
+
+    <footer>
+      <p>&copy; 2025 {{ nomeEmpresa }}. Todos os direitos reservados.</p>
+    </footer>
+  </div>
+
+  <script>
+    const { createApp } = Vue;
+
+    createApp({
+      data() {
+        return {
+          pagina: 'sobre',
+          nomeEmpresa: 'Koios',
+          slogan: 'Inteligência, estilo e praticidade na palma da sua mão',
+          projeto: 'Meu Bolso',
+          produtos: ['Camisas de time autênticas', 'iPhones seminovos com garantia', 'Meu Bolso – Controle financeiro via WhatsApp'],
+          valores: {
+            missao: 'Facilitar o dia a dia com soluções acessíveis e tecnológicas.',
+            visao: 'Ser referência em inovação prática e confiável.',
+            lista: ['Inovação com propósito', 'Ética', 'Simplicidade', 'Foco no cliente']
+          },
+          politica: 'Respeitamos sua privacidade. Os dados coletados são utilizados apenas para fins operacionais, de forma segura e conforme a LGPD. Não compartilhamos dados com terceiros.',
+          contato: {
+            whatsapp: '(xx) xxxxx-xxxx',
+            email: 'contato@koios.com.br',
+            instagram: '@koios.oficial'
+          }
+        }
+      }
+    }).mount('#app');
+  </script>
 </body>
 </html>
