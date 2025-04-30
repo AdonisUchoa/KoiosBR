@@ -128,11 +128,11 @@
     </header>
 
     <nav>
-      <a @click="trocarPagina('sobre')"><i class="fas fa-info-circle"></i> Sobre</a>
-      <a @click="trocarPagina('valores')"><i class="fas fa-bullseye"></i> Valores</a>
-      <a @click="trocarPagina('projetos')"><i class="fas fa-boxes"></i> Projetos</a>
-      <a @click="trocarPagina('privacidade')"><i class="fas fa-user-shield"></i> Privacidade</a>
-      <a @click="trocarPagina('contato')"><i class="fas fa-envelope"></i> Contato</a>
+      <a @click="trocarPaginaManual('sobre')"><i class="fas fa-info-circle"></i> Sobre</a>
+      <a @click="trocarPaginaManual('valores')"><i class="fas fa-bullseye"></i> Valores</a>
+      <a @click="trocarPaginaManual('projetos')"><i class="fas fa-boxes"></i> Projetos</a>
+      <a @click="trocarPaginaManual('privacidade')"><i class="fas fa-user-shield"></i> Privacidade</a>
+      <a @click="trocarPaginaManual('contato')"><i class="fas fa-envelope"></i> Contato</a>
     </nav>
 
     <section :class="pagina === 'sobre' ? 'fade-in' : ultimaPagina === 'sobre' ? 'fade-out' : ''">
@@ -175,12 +175,21 @@
   </div>
 
   <script>
+    const rotas = {
+      '/': 'sobre',
+      '/sobre-nos': 'sobre',
+      '/valores': 'valores',
+      '/projetos': 'projetos',
+      '/privacidade': 'privacidade',
+      '/contato': 'contato'
+    };
+
     const { createApp } = Vue;
 
     createApp({
       data() {
         return {
-          pagina: 'sobre',
+          pagina: '',
           ultimaPagina: '',
           nomeEmpresa: 'Koios',
           slogan: 'Inteligência, estilo e praticidade na palma da sua mão',
@@ -204,12 +213,22 @@
         };
       },
       methods: {
-        trocarPagina(nova) {
+        trocarPaginaManual(nova) {
           this.ultimaPagina = this.pagina;
-          setTimeout(() => {
-            this.pagina = nova;
-          }, 100);
+          this.pagina = nova;
+          const path = Object.entries(rotas).find(([, val]) => val === nova)?.[0] || '/';
+          window.history.pushState({}, '', path);
+        },
+        atualizarRota() {
+          const path = window.location.pathname;
+          const rota = rotas[path] || 'sobre';
+          this.ultimaPagina = this.pagina;
+          this.pagina = rota;
         }
+      },
+      mounted() {
+        this.atualizarRota();
+        window.addEventListener('popstate', this.atualizarRota);
       }
     }).mount('#app');
   </script>
