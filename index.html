@@ -25,12 +25,6 @@
       text-align: center;
     }
 
-    .logo {
-      width: 160px;
-      max-width: 100%;
-      margin-bottom: 1rem;
-    }
-
     header h1 {
       margin: 0;
       font-size: 2.5rem;
@@ -129,7 +123,6 @@
 <body>
   <div id="app">
     <header>
-      <img src="3af201b4-3d54-4005-ae2c-67c0eeb9eebe.png" alt="Logo da Koios" class="logo">
       <h1>{{ nomeEmpresa }}</h1>
       <p>{{ slogan }}</p>
     </header>
@@ -141,3 +134,103 @@
       <a @click="trocarPaginaManual('privacidade')"><i class="fas fa-user-shield"></i> Privacidade</a>
       <a @click="trocarPaginaManual('contato')"><i class="fas fa-envelope"></i> Contato</a>
     </nav>
+
+    <section :class="pagina === 'sobre' ? 'fade-in' : ultimaPagina === 'sobre' ? 'fade-out' : ''">
+      <h2><i class="fas fa-info-circle"></i> Sobre a {{ nomeEmpresa }}</h2>
+      <p>A <span class="highlight">{{ nomeEmpresa }}</span> nasceu da inspiração no titã da inteligência da mitologia grega, Ceus (Koios). Buscamos unir sabedoria e inovação para entregar experiências reais ao nosso público.</p>
+      <p>Atuamos na venda de <strong>camisas de time</strong>, <strong>iPhones</strong> e estamos desenvolvendo o projeto <strong>{{ projeto }}</strong>, uma solução de finanças pessoais com controle direto pelo WhatsApp.</p>
+    </section>
+
+    <section :class="pagina === 'valores' ? 'fade-in' : ultimaPagina === 'valores' ? 'fade-out' : ''">
+      <h2><i class="fas fa-bullseye"></i> Missão, Visão e Valores</h2>
+      <ul>
+        <li><strong>Missão:</strong> {{ valores.missao }}</li>
+        <li><strong>Visão:</strong> {{ valores.visao }}</li>
+        <li><strong>Valores:</strong> {{ valores.lista.join(', ') }}</li>
+      </ul>
+    </section>
+
+    <section :class="pagina === 'projetos' ? 'fade-in' : ultimaPagina === 'projetos' ? 'fade-out' : ''">
+      <h2><i class="fas fa-boxes"></i> Nossos Produtos e Projetos</h2>
+      <ul>
+        <li v-for="item in produtos" :key="item">✔ {{ item }}</li>
+      </ul>
+    </section>
+
+    <section :class="pagina === 'privacidade' ? 'fade-in' : ultimaPagina === 'privacidade' ? 'fade-out' : ''">
+      <h2><i class="fas fa-user-shield"></i> Política de Privacidade</h2>
+      <p>{{ politica }}</p>
+    </section>
+
+    <section :class="pagina === 'contato' ? 'fade-in' : ultimaPagina === 'contato' ? 'fade-out' : ''">
+      <h2><i class="fas fa-envelope"></i> Contato</h2>
+      <p><strong>WhatsApp:</strong> {{ contato.whatsapp }}<br />
+         <strong>E-mail:</strong> {{ contato.email }}<br />
+         <strong>Instagram:</strong> {{ contato.instagram }}</p>
+    </section>
+
+    <footer>
+      <p>&copy; 2025 {{ nomeEmpresa }}. Todos os direitos reservados.</p>
+    </footer>
+  </div>
+
+  <script>
+    const rotas = {
+      '/': 'sobre',
+      '/sobre-nos': 'sobre',
+      '/valores': 'valores',
+      '/projetos': 'projetos',
+      '/privacidade': 'privacidade',
+      '/contato': 'contato'
+    };
+
+    const { createApp } = Vue;
+
+    createApp({
+      data() {
+        return {
+          pagina: '',
+          ultimaPagina: '',
+          nomeEmpresa: 'Koios',
+          slogan: 'Inteligência, estilo e praticidade na palma da sua mão',
+          projeto: 'Meu Bolso',
+          produtos: [
+            'Camisas de time autênticas',
+            'iPhones seminovos com garantia',
+            'Meu Bolso – Controle financeiro via WhatsApp'
+          ],
+          valores: {
+            missao: 'Facilitar o dia a dia com soluções acessíveis e tecnológicas.',
+            visao: 'Ser referência em inovação prática e confiável.',
+            lista: ['Inovação com propósito', 'Ética', 'Simplicidade', 'Foco no cliente']
+          },
+          politica: 'Respeitamos sua privacidade. Os dados coletados são utilizados apenas para fins operacionais, de forma segura e conforme a LGPD. Não compartilhamos dados com terceiros.',
+          contato: {
+            whatsapp: '(xx) xxxxx-xxxx',
+            email: 'contato@koios.com.br',
+            instagram: '@koios.oficial'
+          }
+        };
+      },
+      methods: {
+        trocarPaginaManual(nova) {
+          this.ultimaPagina = this.pagina;
+          this.pagina = nova;
+          const path = Object.entries(rotas).find(([, val]) => val === nova)?.[0] || '/';
+          window.history.pushState({}, '', path);
+        },
+        atualizarRota() {
+          const path = window.location.pathname;
+          const rota = rotas[path] || 'sobre';
+          this.ultimaPagina = this.pagina;
+          this.pagina = rota;
+        }
+      },
+      mounted() {
+        this.atualizarRota();
+        window.addEventListener('popstate', this.atualizarRota);
+      }
+    }).mount('#app');
+  </script>
+</body>
+</html>
