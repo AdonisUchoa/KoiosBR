@@ -172,9 +172,8 @@
 
     <section :class="pagina === 'contato' ? 'fade-in' : ultimaPagina === 'contato' ? 'fade-out' : ''">
       <h2><i class="fas fa-envelope"></i> Contato</h2>
-      <p><strong>WhatsApp:</strong> {{ contato.whatsapp }}<br />
-         <strong>E-mail:</strong> {{ contato.email }}<br />
-         <strong>Instagram:</strong> {{ contato.instagram }}</p>
+      <strong>E-mail:</strong> {{ contato.email }}<br />
+         <strong>Instagram:</strong> <a href="https://www.instagram.com/koios.com.br?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" target="_blank" style="color: #4ca1af; text-decoration: none;">@koios.com.br</a></p>
     </section>
 
     <footer>
@@ -214,9 +213,8 @@
           },
           politica: 'Respeitamos sua privacidade. Os dados coletados são utilizados apenas para fins operacionais, de forma segura e conforme a LGPD. Não compartilhamos dados com terceiros.',
           contato: {
-            whatsapp: '(xx) xxxxx-xxxx',
             email: 'contato@koios.com.br',
-            instagram: '@koios.oficial'
+            instagram: 'https://www.instagram.com/koios.com.br?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw=='
           }
         };
       },
